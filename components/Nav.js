@@ -49,9 +49,9 @@ function Nav({ openModalWithContent }) {
           onClick={openForm}
           className="h-6 w-6 flex items-center justify-center text-white font-bold rounded-full border border-[#fff] bg-blue-500"
         >
-          <svg viewBox="0 0 24 24" stroke="#fff">
-            <path d="M5 12H19" strokeWidth="2"></path>
-            <path d="M12 5L12 19" strokeWidth="2"></path>
+          <svg viewBox="0 0 24 24" height="100%" stroke="#fff" strokeWidth="2">
+            <path d="M5 12H19"></path>
+            <path d="M12 5L12 19"></path>
           </svg>
         </button>
 
