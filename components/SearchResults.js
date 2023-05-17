@@ -34,7 +34,7 @@ function SearchResults({ closeSearch }) {
             <div
               key={index}
               onClick={() => openRecipe(recipe.name)}
-              className="cursor-pointer hover:bg-gray-100 p-2 py-3 rounded-md text-xl"
+              className="cursor-pointer border-b sm:hover:bg-gray-100 p-2 py-3 text-xl"
             >
               {recipe.name}
             </div>

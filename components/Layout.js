@@ -17,7 +17,7 @@ function Layout({ children }) {
 
   return (
     <div className="px-4 sm:px-6 flex flex-col items-center mb-8">
-      <div className="relative w-full max-w-6xl">
+      <div className="relative w-full max-w-7xl">
         <Nav openModalWithContent={openModalWithContent} />
         <main>{children}</main>
         {showModal && (

@@ -37,9 +37,11 @@ function RecipePage() {
       <p className="mt-4 mb-2 font-bold text-lg">Ingredients:</p>
       <ul className="list-disc list-inside mb-4">
         {currentRecipe.ingredients.map((ingredient, index) => (
-          <li key={index} className="capitalize">
-            {ingredient}
-          </li>
+          <div key={index}>
+            <span>
+              {ingredient.quantity} {ingredient.unit} {ingredient.name}
+            </span>
+          </div>
         ))}
       </ul>
       <p className="mt-4 mb-2 font-bold text-lg">Directions:</p>

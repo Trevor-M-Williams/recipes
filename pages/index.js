@@ -36,7 +36,7 @@ function Home() {
             {sortedRecipes[category].map((recipe, index) => (
               <div
                 key={index}
-                className="w-72 max-w-full shrink-0 border-2 border-gray-200 rounded-md cursor-pointer hover:border-blue-300 overflow-hidden"
+                className="w-72 max-w-full shrink-0 border-2 border-gray-200 rounded-md cursor-pointer sm:hover:border-blue-200 overflow-hidden"
                 onClick={() => openRecipe(recipe.name)}
               >
                 <div className="h-60 sm:h-52 w-full bg-gray-200"></div>

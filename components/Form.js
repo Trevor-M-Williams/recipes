@@ -4,12 +4,15 @@ import { ref, push, set } from "firebase/database";
 
 const Form = ({ closeForm }) => {
   const [recipeName, setRecipeName] = useState("");
-  const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [directions, setDirections] = useState([]);
   const [servings, setServings] = useState("");
   const [timeToCook, setTimeToCook] = useState("");
   const [category, setCategory] = useState("");
+
+  const addIngredient = () => {
+    setIngredients([...ingredients, { name: "", quantity: "", unit: "" }]);
+  };
 
   const writeRecipeToFirebase = () => {
     if (category === "") {
@@ -19,7 +22,6 @@ const Form = ({ closeForm }) => {
     const newRecipeRef = push(ref(db, `recipes`));
     set(newRecipeRef, {
       name: recipeName,
-      description,
       ingredients,
       directions,
       servings,
@@ -38,13 +40,6 @@ const Form = ({ closeForm }) => {
           placeholder="Recipe name"
           value={recipeName}
           onChange={(e) => setRecipeName(e.target.value)}
-          className="block w-full p-2 rounded-md border border-gray-300"
-          required
-        />
-        <textarea
-          placeholder="Recipe description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
           className="block w-full p-2 rounded-md border border-gray-300"
           required
         />
@@ -80,12 +75,62 @@ const Form = ({ closeForm }) => {
           className="block w-full p-2 rounded-md border border-gray-300"
           required
         />
-        <textarea
-          placeholder="Ingredients (comma-separated)"
-          onChange={(e) => setIngredients(e.target.value.split(","))}
-          className="block w-full p-2 rounded-md border border-gray-300"
-          required
-        />
+
+        <fieldset className="border p-2 rounded-md">
+          <legend className="text-sm font-medium ">Ingredients</legend>
+          {ingredients.map((ingredient, index) => (
+            <div
+              key={index}
+              className="flex rounded-md border border-gray-300 my-1 overflow-hidden"
+            >
+              <input
+                type="text"
+                placeholder="Ingredient"
+                value={ingredient.name}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index].name = e.target.value;
+                  setIngredients(newIngredients);
+                }}
+                className="p-2  grow"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Quantity"
+                value={ingredient.quantity}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index].quantity = e.target.value;
+                  setIngredients(newIngredients);
+                }}
+                className="p-2  w-20"
+                required
+              />
+              <select
+                value={ingredient.unit}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index].unit = e.target.value;
+                  setIngredients(newIngredients);
+                }}
+                className="p-2  w-20"
+              >
+                <option value="units">Units</option>
+                <option value="cups">Cups</option>
+                <option value="tbsp">Tbsp</option>
+                <option value="tsp">Tsp</option>
+              </select>
+            </div>
+          ))}
+          <button
+            onClick={addIngredient}
+            className="mt-2 py-1 px-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 self-start"
+          >
+            Add
+          </button>
+        </fieldset>
+
         <textarea
           placeholder="Directions (comma-separated)"
           onChange={(e) => setDirections(e.target.value.split(","))}
@@ -95,9 +140,9 @@ const Form = ({ closeForm }) => {
 
         <button
           onClick={writeRecipeToFirebase}
-          className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 self-start"
+          className="py-2 px-4 bg-blue-600 text-white rounded-md sm:hover:bg-blue-700 self-start"
         >
-          Add Recipe
+          Submit
         </button>
       </div>
     </div>

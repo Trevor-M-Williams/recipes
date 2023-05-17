@@ -26,17 +26,21 @@ function CategoryPage() {
     );
   }
 
+  const sortedRecipes = recipes[category].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
   return (
     <Layout>
       <h1 className="capitalize text-2xl font-medium mb-4">
         {category} Recipes
       </h1>
       <div className="flex flex-wrap gap-6 sm:gap-x-[2%] sm:gap-y-4">
-        {recipes[category] &&
-          recipes[category].map((recipe, index) => (
+        {sortedRecipes &&
+          sortedRecipes.map((recipe, index) => (
             <div
               key={index}
-              className="w-full sm:w-[49%] md:w-[32%] shrink-0 border-2 border-gray-200 rounded-md cursor-pointer hover:border-blue-300 overflow-hidden"
+              className="w-full sm:w-[49%] md:w-[32%] shrink-0 border-2 border-gray-200 rounded-md cursor-pointer sm:hover:border-blue-300 overflow-hidden"
               onClick={() => openRecipe(recipe.name)}
             >
               <div className="h-52 w-full bg-gray-200"></div>
