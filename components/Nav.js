@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Form from "./Form";
 import SearchResults from "./SearchResults";
 
@@ -15,7 +16,7 @@ function Nav({ openModalWithContent }) {
   return (
     <nav className="sticky top-0 bg-white flex justify-between items-center py-3 mb-2 sm:py-4 sm:mb-4">
       <div className="flex items-center">
-        <a href="/" className="h-6">
+        <Link href="/" className="h-6">
           <svg
             viewBox="0 0 24 24"
             height="100%"
@@ -27,7 +28,7 @@ function Nav({ openModalWithContent }) {
             <path d="M3 11L7.5 7L10.6713 4.18109C11.429 3.50752 12.571 3.50752 13.3287 4.18109L16.5 7L21 11"></path>
             <path d="M10 21V17C10 15.8954 10.8954 15 12 15V15C13.1046 15 14 15.8954 14 17V21"></path>
           </svg>
-        </a>
+        </Link>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-1">
