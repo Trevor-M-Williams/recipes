@@ -1,0 +1,185 @@
+{
+  "recipes": [
+    {
+      "name": "Pancakes",
+      "description": "Fluffy breakfast pancakes",
+      "ingredients": ["flour", "eggs", "milk", "sugar", "baking powder"],
+      "directions": [
+        "Mix ingredients",
+        "Pour batter onto heated griddle",
+        "Flip when bubbly"
+      ],
+      "servings": 4,
+      "timeToCook": "15 minutes",
+      "category": "breakfast"
+    },
+    {
+      "name": "Chocolate Chip Pancakes",
+      "description": "Fluffy breakfast pancakes",
+      "ingredients": ["flour", "eggs", "milk", "sugar", "baking powder"],
+      "directions": [
+        "Mix ingredients",
+        "Pour batter onto heated griddle",
+        "Flip when bubbly"
+      ],
+      "servings": 4,
+      "timeToCook": "15 minutes",
+      "category": "breakfast"
+    },
+    {
+      "name": "Blueberry Pancakes",
+      "description": "Fluffy breakfast pancakes",
+      "ingredients": ["flour", "eggs", "milk", "sugar", "baking powder"],
+      "directions": [
+        "Mix ingredients",
+        "Pour batter onto heated griddle",
+        "Flip when bubbly"
+      ],
+      "servings": 4,
+      "timeToCook": "15 minutes",
+      "category": "breakfast"
+    },
+    {
+      "name": "Strawberry Pancakes",
+      "description": "Fluffy breakfast pancakes",
+      "ingredients": ["flour", "eggs", "milk", "sugar", "baking powder"],
+      "directions": [
+        "Mix ingredients",
+        "Pour batter onto heated griddle",
+        "Flip when bubbly"
+      ],
+      "servings": 4,
+      "timeToCook": "15 minutes",
+      "category": "breakfast"
+    },
+    {
+      "name": "Scrambled Eggs",
+      "description": "Simple and quick breakfast",
+      "ingredients": ["eggs", "milk", "butter", "salt", "pepper"],
+      "directions": [
+        "Beat eggs with milk",
+        "Pour into heated pan",
+        "Stir until cooked"
+      ],
+      "servings": 2,
+      "timeToCook": "5 minutes",
+      "category": "breakfast"
+    },
+    {
+      "name": "Chicken Caesar Salad",
+      "description": "Classic lunch salad with chicken",
+      "ingredients": [
+        "chicken",
+        "lettuce",
+        "parmesan",
+        "croutons",
+        "caesar dressing"
+      ],
+      "directions": ["Cook chicken", "Toss ingredients together"],
+      "servings": 2,
+      "timeToCook": "15 minutes",
+      "category": "lunch"
+    },
+    {
+      "name": "BLT Sandwich",
+      "description": "Classic bacon, lettuce and tomato sandwich",
+      "ingredients": ["bacon", "lettuce", "tomato", "bread", "mayonnaise"],
+      "directions": ["Cook bacon", "Assemble sandwich", "Cut and serve"],
+      "servings": 1,
+      "timeToCook": "10 minutes",
+      "category": "lunch"
+    },
+    {
+      "name": "Spaghetti Bolognese",
+      "description": "Traditional Italian dish",
+      "ingredients": [
+        "spaghetti",
+        "ground beef",
+        "tomato sauce",
+        "onion",
+        "garlic",
+        "cheese"
+      ],
+      "directions": [
+        "Cook spaghetti",
+        "Cook beef with sauce",
+        "Serve with grated cheese"
+      ],
+      "servings": 4,
+      "timeToCook": "30 minutes",
+      "category": "dinner"
+    },
+    {
+      "name": "Chicken Stir Fry",
+      "description": "Quick and healthy dinner option",
+      "ingredients": ["chicken", "vegetables", "soy sauce", "rice"],
+      "directions": [
+        "Cook chicken",
+        "Add vegetables and sauce",
+        "Serve over rice"
+      ],
+      "servings": 4,
+      "timeToCook": "20 minutes",
+      "category": "dinner"
+    },
+    {
+      "name": "Chocolate Chip Cookies",
+      "description": "Delicious homemade cookies",
+      "ingredients": ["flour", "sugar", "butter", "chocolate chips"],
+      "directions": ["Mix ingredients", "Bake in oven", "Let cool and serve"],
+      "servings": 12,
+      "timeToCook": "25 minutes",
+      "category": "dessert"
+    },
+    {
+      "name": "Strawberry Cheesecake",
+      "description": "Rich and creamy dessert",
+      "ingredients": [
+        "cream cheese",
+        "sugar",
+        "strawberries",
+        "biscuits",
+        "butter"
+      ],
+      "directions": [
+        "Make base with biscuits and butter",
+        "Mix cream cheese and sugar",
+        "Top with strawberries"
+      ],
+      "servings": 8,
+      "timeToCook": "1 hour",
+      "category": "dessert"
+    },
+    {
+      "name": "Hummus",
+      "description": "Healthy chickpea dip",
+      "ingredients": [
+        "chickpeas",
+        "tahini",
+        "lemon juice",
+        "garlic",
+        "olive oil"
+      ],
+      "directions": ["Blend all ingredients until smooth"],
+      "servings": 4,
+      "timeToCook": "10 minutes",
+      "category": "snack"
+    },
+    {
+      "name": "Guacamole",
+      "description": "Classic Mexican dip",
+      "ingredients": [
+        "avocados",
+        "lime",
+        "cilantro",
+        "tomatoes",
+        "onion",
+        "salt"
+      ],
+      "directions": ["Mash avocados", "Mix in other ingredients"],
+      "servings": 4,
+      "timeToCook": "15 minutes",
+      "category": "snack"
+    }
+  ]
+}
