@@ -1,10 +1,17 @@
+import { useContext } from "react";
+import { RecipeContext } from "../context/RecipeContext";
 import Link from "next/link";
 import Form from "./Form";
 import SearchResults from "./SearchResults";
 
-function Nav({ openModalWithContent }) {
+function Nav() {
+  const { openModalWithContent, setEditing, setRecipeToEdit } =
+    useContext(RecipeContext);
+
   const openForm = () => {
-    openModalWithContent(<Form closeForm={() => openModalWithContent(null)} />);
+    setEditing(false);
+    setRecipeToEdit(null);
+    openModalWithContent(<Form />);
   };
 
   const openSearch = () => {

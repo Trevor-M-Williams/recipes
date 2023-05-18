@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { db } from "../firebase";
-import { ref, push, set } from "firebase/database";
+import { ref, push, set, update, remove } from "firebase/database";
 import { RecipeContext } from "../context/RecipeContext";
 
-const Form = ({ closeForm }) => {
+const Form = () => {
   const {
     recipeName,
     setRecipeName,
@@ -18,8 +18,24 @@ const Form = ({ closeForm }) => {
     setTimeToCook,
     category,
     setCategory,
+    editing,
+    setEditing,
+    recipeToEdit,
+    setRecipeToEdit,
+    openModalWithContent,
   } = useContext(RecipeContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (editing && recipeToEdit) {
+      setRecipeName(recipeToEdit.name);
+      setIngredients(recipeToEdit.ingredients);
+      setDirections(recipeToEdit.directions);
+      setServings(recipeToEdit.servings);
+      setTimeToCook(recipeToEdit.timeToCook);
+      setCategory(recipeToEdit.category);
+    }
+  }, [editing, recipeToEdit]);
 
   const addDirection = () => {
     setDirections([...directions, ""]);
@@ -31,37 +47,66 @@ const Form = ({ closeForm }) => {
 
   const clearForm = () => {
     setRecipeName("");
-    setIngredients([]);
-    setDirections([]);
+    setIngredients([{ name: "", quantity: "", unit: "" }]);
+    setDirections([""]);
     setServings("");
     setTimeToCook("");
     setCategory("");
+    setEditing(false);
+    setRecipeToEdit(null);
   };
 
-  const writeRecipeToFirebase = async () => {
+  const closeForm = () => {
+    clearForm();
+    openModalWithContent(null);
+  };
+
+  const deleteRecipe = async (id) => {
+    await remove(ref(db, `recipes/${id}`));
+    router.push("/");
+    closeForm();
+  };
+
+  const writeRecipeToFirebase = async (e) => {
+    e.preventDefault();
+
     if (category === "") {
       return;
     }
 
-    const newRecipeRef = push(ref(db, `recipes`));
-    await set(newRecipeRef, {
-      name: recipeName,
-      ingredients,
-      directions,
-      servings,
-      timeToCook,
-      category,
-    });
+    if (editing) {
+      const recipeRef = ref(db, `recipes/${recipeToEdit.id}`);
+      await update(recipeRef, {
+        name: recipeName,
+        ingredients,
+        directions,
+        servings,
+        timeToCook,
+        category,
+      });
+    } else {
+      const newRecipeRef = push(ref(db, `recipes`));
+      await set(newRecipeRef, {
+        name: recipeName,
+        ingredients,
+        directions,
+        servings,
+        timeToCook,
+        category,
+      });
+    }
 
     router.push(`/recipes/${recipeName.replaceAll(" ", "-").toLowerCase()}`);
-    clearForm();
     closeForm();
   };
 
   return (
     <div className="w-full h-full flex flex-col justify-center">
-      <form className="space-y-4">
-        <h1 className="text-2xl font-medium">New Recipe</h1>
+      <h1 className="text-2xl font-medium mb-2">New Recipe</h1>
+      <form
+        className="space-y-4 max-h-[70vh] overflow-auto"
+        onSubmit={writeRecipeToFirebase}
+      >
         <input
           type="text"
           placeholder="Recipe name"
@@ -89,6 +134,7 @@ const Form = ({ closeForm }) => {
           <option value="snack">Snack</option>
         </select>
         <input
+          value={servings}
           type="number"
           placeholder="Servings"
           onChange={(e) => setServings(e.target.value)}
@@ -96,6 +142,7 @@ const Form = ({ closeForm }) => {
           required
         />
         <input
+          value={timeToCook}
           type="text"
           placeholder="Time to cook"
           onChange={(e) => setTimeToCook(e.target.value)}
@@ -106,49 +153,66 @@ const Form = ({ closeForm }) => {
         <fieldset className="border p-2 rounded-md">
           <legend className="text-sm font-medium ">Ingredients</legend>
           {ingredients.map((ingredient, index) => (
-            <div
-              key={index}
-              className="flex rounded-md border border-gray-300 my-1 overflow-hidden"
-            >
-              <input
-                type="text"
-                placeholder="Ingredient"
-                value={ingredient.name}
-                onChange={(e) => {
-                  const newIngredients = [...ingredients];
-                  newIngredients[index].name = e.target.value;
-                  setIngredients(newIngredients);
-                }}
-                className="p-2  grow"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Quantity"
-                value={ingredient.quantity}
-                onChange={(e) => {
-                  const newIngredients = [...ingredients];
-                  newIngredients[index].quantity = e.target.value;
-                  setIngredients(newIngredients);
-                }}
-                className="p-2  w-20"
-                required
-              />
-              <select
-                value={ingredient.unit}
-                onChange={(e) => {
-                  const newIngredients = [...ingredients];
-                  newIngredients[index].unit = e.target.value;
-                  setIngredients(newIngredients);
-                }}
-                className="p-2  w-20"
+            <div className="flex items-center">
+              <div
+                key={index}
+                className="w-[90%] flex rounded-md border border-gray-300 my-1 overflow-hidden"
               >
-                <option value="units">Units</option>
-                <option value="lbs">Lbs</option>
-                <option value="cups">Cups</option>
-                <option value="tbsp">Tbsp</option>
-                <option value="tsp">Tsp</option>
-              </select>
+                <input
+                  type="text"
+                  placeholder="Ingredient"
+                  value={ingredient.name}
+                  onChange={(e) => {
+                    const newIngredients = [...ingredients];
+                    newIngredients[index].name = e.target.value;
+                    setIngredients(newIngredients);
+                  }}
+                  className="p-2 border-r w-full"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Quantity"
+                  value={ingredient.quantity}
+                  onChange={(e) => {
+                    const newIngredients = [...ingredients];
+                    newIngredients[index].quantity = e.target.value;
+                    setIngredients(newIngredients);
+                  }}
+                  className="p-2 border-r w-20"
+                  required
+                />
+                <select
+                  value={ingredient.unit}
+                  onChange={(e) => {
+                    const newIngredients = [...ingredients];
+                    newIngredients[index].unit = e.target.value;
+                    setIngredients(newIngredients);
+                  }}
+                  className="p-2 border-r w-20"
+                >
+                  <option value="units">Units</option>
+                  <option value="lbs">Lbs</option>
+                  <option value="cups">Cups</option>
+                  <option value="tbsp">Tbsp</option>
+                  <option value="tsp">Tsp</option>
+                </select>
+              </div>
+              {index !== 0 && (
+                <div
+                  className="w-[10%]"
+                  onClick={() => {
+                    const newIngredients = [...ingredients];
+                    newIngredients.splice(index, 1);
+                    setIngredients(newIngredients);
+                  }}
+                >
+                  <svg viewBox="0 0 1024 1024" fill="#000000">
+                    <path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z"></path>
+                    <path d="M328 340.8l32-31.2 348 348-32 32z"></path>
+                  </svg>
+                </div>
+              )}
             </div>
           ))}
           <div
@@ -162,19 +226,37 @@ const Form = ({ closeForm }) => {
         <fieldset className="border p-2 rounded-md">
           <legend className="text-sm font-medium">Directions</legend>
           {directions.map((direction, index) => (
-            <input
-              key={index}
-              type="text"
-              placeholder="Direction"
-              value={direction}
-              onChange={(e) => {
-                const newDirections = [...directions];
-                newDirections[index] = e.target.value;
-                setDirections(newDirections);
-              }}
-              className="block w-full p-2 rounded-md border border-gray-300 my-1"
-              required
-            />
+            <div className="flex items-center">
+              <input
+                key={index}
+                type="text"
+                placeholder="Direction"
+                value={direction}
+                onChange={(e) => {
+                  const newDirections = [...directions];
+                  newDirections[index] = e.target.value;
+                  setDirections(newDirections);
+                }}
+                className="block w-[90%] p-2 rounded-md border border-gray-300 my-1"
+                required
+              />
+              {index !== 0 && (
+                <div
+                  className="w-[10%]"
+                  onClick={() => {
+                    console.log(index);
+                    const newDirections = [...directions];
+                    newDirections.splice(index, 1);
+                    setDirections(newDirections);
+                  }}
+                >
+                  <svg viewBox="0 0 1024 1024" fill="#000000">
+                    <path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z"></path>
+                    <path d="M328 340.8l32-31.2 348 348-32 32z"></path>
+                  </svg>
+                </div>
+              )}
+            </div>
           ))}
           <div
             onClick={addDirection}
@@ -184,20 +266,43 @@ const Form = ({ closeForm }) => {
           </div>
         </fieldset>
 
-        <div className="mt-4 flex justify-end space-x-2">
-          <div
-            onClick={clearForm}
-            className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
-          >
-            Clear
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex space-x-2">
+            <button
+              type="submit"
+              className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Submit
+            </button>
+            <div
+              onClick={clearForm}
+              className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+            >
+              Clear
+            </div>
           </div>
-          <button
-            type="submit"
-            onClick={writeRecipeToFirebase}
-            className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Submit
-          </button>
+
+          {editing && (
+            <div
+              onClick={() => deleteRecipe(recipeToEdit.id)}
+              className="h-6 stroke-red-500"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                height="100%"
+                fill="none"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M10 12V17"></path>
+                <path d="M14 12V17"></path>
+                <path d="M4 7H20"></path>
+                <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10"></path>
+                <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"></path>
+              </svg>
+            </div>
+          )}
         </div>
       </form>
     </div>

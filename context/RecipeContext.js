@@ -11,9 +11,15 @@ export const RecipeProvider = ({ children }) => {
     { name: "", quantity: "", unit: "" },
   ]);
   const [directions, setDirections] = useState([""]);
-  const [servings, setServings] = useState("");
-  const [timeToCook, setTimeToCook] = useState("");
+  const [servings, setServings] = useState(null);
+  const [timeToCook, setTimeToCook] = useState(null);
   const [category, setCategory] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+
+  const [editing, setEditing] = useState(false);
+  const [recipeToEdit, setRecipeToEdit] = useState(null);
 
   useEffect(() => {
     const recipesRef = ref(db, "recipes/");
@@ -30,13 +36,21 @@ export const RecipeProvider = ({ children }) => {
 
       for (const id in allRecipes) {
         const recipe = allRecipes[id];
-        sortedRecipes[recipe.category.toLowerCase()].push(recipe);
+        sortedRecipes[recipe.category.toLowerCase()].push({ ...recipe, id });
       }
 
-      console.log(sortedRecipes);
       setRecipes(sortedRecipes);
     });
   }, []);
+
+  const openModalWithContent = (content) => {
+    if (!content) {
+      setShowModal(false);
+      return;
+    }
+    setModalContent(content);
+    setShowModal(true);
+  };
 
   return (
     <RecipeContext.Provider
@@ -54,6 +68,15 @@ export const RecipeProvider = ({ children }) => {
         setTimeToCook,
         category,
         setCategory,
+        showModal,
+        setShowModal,
+        modalContent,
+        setModalContent,
+        openModalWithContent,
+        editing,
+        setEditing,
+        recipeToEdit,
+        setRecipeToEdit,
       }}
     >
       {children}

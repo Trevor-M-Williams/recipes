@@ -3,7 +3,7 @@ import { RecipeContext } from "../context/RecipeContext";
 import { useRouter } from "next/router";
 
 function SearchResults({ closeSearch }) {
-  const recipes = useContext(RecipeContext);
+  const { recipes } = useContext(RecipeContext);
   const [search, setSearch] = useState("");
   const router = useRouter();
 

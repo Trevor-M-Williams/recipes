@@ -1,7 +1,13 @@
-import { useRef } from "react";
+import { useRef, useContext } from "react";
+import { RecipeContext } from "../context/RecipeContext";
 
-function Modal({ closeModal, children }) {
+function Modal() {
+  const { setShowModal, modalContent } = useContext(RecipeContext);
   const modalRef = useRef();
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -32,13 +38,13 @@ function Modal({ closeModal, children }) {
             <path
               d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
               stroke="#666"
-              stroke-width="2"
+              strokeWidth="2"
             ></path>
           </svg>
         </button>
 
         <div className="bg-white p-4">
-          <div className="">{children}</div>
+          <div className="">{modalContent}</div>
         </div>
       </div>
     </div>
