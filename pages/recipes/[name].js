@@ -68,7 +68,7 @@ function RecipePage() {
         {currentRecipe.ingredients?.map((ingredient, index) => {
           let { name, quantity, unit } = ingredient;
           if (unit === "units") unit = "";
-          else if (unit === "cups" && quantity === "1") unit = "cup";
+          else if (unit === "cups" && parseFloat(quantity) <= 1) unit = "cup";
           return (
             <li key={index}>
               {quantity} {unit} {name.toLowerCase()}

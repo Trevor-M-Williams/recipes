@@ -153,11 +153,8 @@ const Form = () => {
         <fieldset className="border p-2 rounded-md">
           <legend className="text-sm font-medium ">Ingredients</legend>
           {ingredients.map((ingredient, index) => (
-            <div className="flex items-center">
-              <div
-                key={index}
-                className="w-[90%] flex rounded-md border border-gray-300 my-1 overflow-hidden"
-              >
+            <div key={index} className="flex items-center">
+              <div className="w-[90%] flex rounded-md border border-gray-300 my-1 overflow-hidden">
                 <input
                   type="text"
                   placeholder="Ingredient"
@@ -226,9 +223,8 @@ const Form = () => {
         <fieldset className="border p-2 rounded-md">
           <legend className="text-sm font-medium">Directions</legend>
           {directions.map((direction, index) => (
-            <div className="flex items-center">
+            <div key={index} className="flex items-center">
               <input
-                key={index}
                 type="text"
                 placeholder="Direction"
                 value={direction}
