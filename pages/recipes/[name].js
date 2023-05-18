@@ -4,8 +4,8 @@ import { RecipeContext } from "../../context/RecipeContext";
 import Layout from "../../components/Layout";
 
 function RecipePage() {
-  const recipes = useContext(RecipeContext);
   const router = useRouter();
+  const { recipes } = useContext(RecipeContext);
   const { name } = router.query;
 
   if (!name) {
@@ -18,7 +18,11 @@ function RecipePage() {
   );
 
   if (!currentRecipe) {
-    return <div>Recipe Not Found</div>;
+    return (
+      <Layout>
+        <div>Recipe Not Found</div>;
+      </Layout>
+    );
   }
 
   return (
@@ -36,7 +40,7 @@ function RecipePage() {
       </p>
       <p className="mt-4 mb-2 font-bold text-lg">Ingredients:</p>
       <ul className="list-disc list-inside mb-4">
-        {currentRecipe.ingredients.map((ingredient, index) => (
+        {currentRecipe.ingredients?.map((ingredient, index) => (
           <div key={index}>
             <span>
               {ingredient.quantity} {ingredient.unit} {ingredient.name}
@@ -46,7 +50,7 @@ function RecipePage() {
       </ul>
       <p className="mt-4 mb-2 font-bold text-lg">Directions:</p>
       <ol className="list-decimal list-inside mb-4">
-        {currentRecipe.directions.map((direction, index) => (
+        {currentRecipe.directions?.map((direction, index) => (
           <li key={index}>{direction}</li>
         ))}
       </ol>

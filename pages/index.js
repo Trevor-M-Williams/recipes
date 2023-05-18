@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 function Home() {
   const router = useRouter();
-  const recipes = useContext(RecipeContext);
+  const { recipes } = useContext(RecipeContext);
 
   const sortedRecipes = { ...recipes };
   for (const category in sortedRecipes) {
@@ -42,7 +42,7 @@ function Home() {
                 <div className="h-60 sm:h-52 w-full bg-gray-200"></div>
                 <div className="p-4 ">
                   <h2 className="text-xl font-medium">{recipe.name}</h2>
-                  <p>{recipe.timeToCook}</p>
+                  <p>{recipe.timeToCook} min</p>
                 </div>
               </div>
             ))}

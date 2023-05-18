@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
 function CategoryPage() {
-  const recipes = useContext(RecipeContext);
   const router = useRouter();
+  const { recipes } = useContext(RecipeContext);
   const { category } = router.query;
 
   const openRecipe = (name) => {
@@ -46,7 +46,7 @@ function CategoryPage() {
               <div className="h-52 w-full bg-gray-200"></div>
               <div className="py-6 px-4 md:p-4 ">
                 <h2 className="text-xl font-medium">{recipe.name}</h2>
-                <p>{recipe.timeToCook}</p>
+                <p>{recipe.timeToCook} min</p>
               </div>
             </div>
           ))}

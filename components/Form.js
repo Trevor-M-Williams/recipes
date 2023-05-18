@@ -1,26 +1,50 @@
-import { useState } from "react";
+import React, { useContext } from "react";
+import { useRouter } from "next/router";
 import { db } from "../firebase";
 import { ref, push, set } from "firebase/database";
+import { RecipeContext } from "../context/RecipeContext";
 
 const Form = ({ closeForm }) => {
-  const [recipeName, setRecipeName] = useState("");
-  const [ingredients, setIngredients] = useState([]);
-  const [directions, setDirections] = useState([]);
-  const [servings, setServings] = useState("");
-  const [timeToCook, setTimeToCook] = useState("");
-  const [category, setCategory] = useState("");
+  const {
+    recipeName,
+    setRecipeName,
+    ingredients,
+    setIngredients,
+    directions,
+    setDirections,
+    servings,
+    setServings,
+    timeToCook,
+    setTimeToCook,
+    category,
+    setCategory,
+  } = useContext(RecipeContext);
+  const router = useRouter();
+
+  const addDirection = () => {
+    setDirections([...directions, ""]);
+  };
 
   const addIngredient = () => {
     setIngredients([...ingredients, { name: "", quantity: "", unit: "" }]);
   };
 
-  const writeRecipeToFirebase = () => {
+  const clearForm = () => {
+    setRecipeName("");
+    setIngredients([]);
+    setDirections([]);
+    setServings("");
+    setTimeToCook("");
+    setCategory("");
+  };
+
+  const writeRecipeToFirebase = async () => {
     if (category === "") {
       return;
     }
 
     const newRecipeRef = push(ref(db, `recipes`));
-    set(newRecipeRef, {
+    await set(newRecipeRef, {
       name: recipeName,
       ingredients,
       directions,
@@ -28,12 +52,15 @@ const Form = ({ closeForm }) => {
       timeToCook,
       category,
     });
+
+    router.push(`/recipes/${recipeName.replaceAll(" ", "-").toLowerCase()}`);
+    clearForm();
     closeForm();
   };
 
   return (
     <div className="w-full h-full flex flex-col justify-center">
-      <div className="space-y-4">
+      <form className="space-y-4">
         <h1 className="text-2xl font-medium">New Recipe</h1>
         <input
           type="text"
@@ -117,34 +144,62 @@ const Form = ({ closeForm }) => {
                 className="p-2  w-20"
               >
                 <option value="units">Units</option>
+                <option value="lbs">Lbs</option>
                 <option value="cups">Cups</option>
                 <option value="tbsp">Tbsp</option>
                 <option value="tsp">Tsp</option>
               </select>
             </div>
           ))}
-          <button
+          <div
             onClick={addIngredient}
-            className="mt-2 py-1 px-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 self-start"
+            className="mt-2 py-1 w-12 flex justify-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Add
-          </button>
+          </div>
         </fieldset>
 
-        <textarea
-          placeholder="Directions (comma-separated)"
-          onChange={(e) => setDirections(e.target.value.split(","))}
-          className="block w-full p-2 rounded-md border border-gray-300"
-          required
-        />
+        <fieldset className="border p-2 rounded-md">
+          <legend className="text-sm font-medium">Directions</legend>
+          {directions.map((direction, index) => (
+            <input
+              key={index}
+              type="text"
+              placeholder="Direction"
+              value={direction}
+              onChange={(e) => {
+                const newDirections = [...directions];
+                newDirections[index] = e.target.value;
+                setDirections(newDirections);
+              }}
+              className="block w-full p-2 rounded-md border border-gray-300 my-1"
+              required
+            />
+          ))}
+          <div
+            onClick={addDirection}
+            className="mt-2 py-1 w-12 flex justify-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Add
+          </div>
+        </fieldset>
 
-        <button
-          onClick={writeRecipeToFirebase}
-          className="py-2 px-4 bg-blue-600 text-white rounded-md sm:hover:bg-blue-700 self-start"
-        >
-          Submit
-        </button>
-      </div>
+        <div className="mt-4 flex justify-end space-x-2">
+          <div
+            onClick={clearForm}
+            className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+          >
+            Clear
+          </div>
+          <button
+            type="submit"
+            onClick={writeRecipeToFirebase}
+            className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
