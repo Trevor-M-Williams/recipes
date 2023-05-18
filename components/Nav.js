@@ -21,7 +21,7 @@ function Nav() {
   };
 
   return (
-    <nav className="sticky top-0 bg-white flex justify-between items-center py-3 mb-2 sm:py-4 sm:mb-4">
+    <nav className="sticky top-0 z-10 bg-white flex justify-between items-center py-3 mb-2 sm:py-4 sm:mb-4">
       <div className="flex items-center">
         <Link href="/" className="h-6">
           <svg
