@@ -1,13 +1,27 @@
-import React, { useContext, useEffect } from "react";
-import { useRouter } from "next/router";
-import { db } from "../firebase";
-import { ref, push, set, update, remove } from "firebase/database";
+import { useState, useContext, useEffect } from "react";
 import { RecipeContext } from "../context/RecipeContext";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import { db } from "../firebase";
+import { ref, push, update, remove } from "firebase/database";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
+import FormIngredients from "./FormIngredients";
+import FormDirections from "./FormDirections";
 
 const Form = () => {
+  const [newImage, setNewImage] = useState(null);
+
   const {
     recipeName,
     setRecipeName,
+    imageUrl,
+    setImageUrl,
     ingredients,
     setIngredients,
     directions,
@@ -34,18 +48,12 @@ const Form = () => {
       setServings(recipeToEdit.servings);
       setTimeToCook(recipeToEdit.timeToCook);
       setCategory(recipeToEdit.category);
+      setImageUrl(recipeToEdit.imageUrl || null);
     }
   }, [editing, recipeToEdit]);
 
-  const addDirection = () => {
-    setDirections([...directions, ""]);
-  };
-
-  const addIngredient = () => {
-    setIngredients([...ingredients, { name: "", quantity: "", unit: "" }]);
-  };
-
-  const clearForm = () => {
+  const clearForm = (e) => {
+    e.preventDefault();
     setRecipeName("");
     setIngredients([{ name: "", quantity: "", unit: "" }]);
     setDirections([""]);
@@ -56,22 +64,58 @@ const Form = () => {
     setRecipeToEdit(null);
   };
 
-  const closeForm = () => {
-    clearForm();
+  const closeForm = (e) => {
+    clearForm(e);
     openModalWithContent(null);
   };
 
-  const deleteRecipe = async (id) => {
+  const deleteRecipe = async (e, id) => {
     await remove(ref(db, `recipes/${id}`));
     router.push("/");
-    closeForm();
+    closeForm(e);
   };
+
+  const handleImageUpload = (e) => {
+    setNewImage(e.target.files[0]);
+    setImageUrl(URL.createObjectURL(e.target.files[0]));
+  };
+
+  async function uploadImageToFirebase(file) {
+    const storage = getStorage();
+    const newStorageRef = storageRef(storage, "images/" + file.name);
+
+    const uploadTask = uploadBytesResumable(newStorageRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // You can observe state change here such as progress, pause, and resume
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  }
 
   const writeRecipeToFirebase = async (e) => {
     e.preventDefault();
 
     if (category === "") {
       return;
+    }
+
+    let newImageUrl = recipeToEdit?.imageUrl || "";
+    if (newImage) {
+      console.log("uploading image");
+      newImageUrl = await uploadImageToFirebase(newImage);
     }
 
     if (editing) {
@@ -83,34 +127,38 @@ const Form = () => {
         servings,
         timeToCook,
         category,
+        imageUrl: newImageUrl,
       });
     } else {
-      const newRecipeRef = push(ref(db, `recipes`));
-      await set(newRecipeRef, {
+      const recipeRef = ref(db, `recipes`);
+      await push(recipeRef, {
         name: recipeName,
         ingredients,
         directions,
         servings,
         timeToCook,
         category,
+        imageUrl: newImageUrl,
       });
     }
 
     router.push(`/recipes/${recipeName.replaceAll(" ", "-").toLowerCase()}`);
-    closeForm();
+    closeForm(e);
   };
 
   return (
     <div className="w-full h-full flex flex-col justify-center">
-      <h1 className="text-2xl font-medium mb-2">New Recipe</h1>
+      <h1 className="text-2xl font-medium mb-2">
+        {editing ? "Edit Recipe" : "New Recipe"}
+      </h1>
       <form
         className="space-y-4 max-h-[70vh] overflow-auto"
         onSubmit={writeRecipeToFirebase}
       >
         <input
+          value={recipeName}
           type="text"
           placeholder="Recipe name"
-          value={recipeName}
           onChange={(e) => setRecipeName(e.target.value)}
           className="block w-full p-2 rounded-md border border-gray-300"
           required
@@ -133,6 +181,24 @@ const Form = () => {
           <option value="dessert">Dessert</option>
           <option value="snack">Snack</option>
         </select>
+
+        {imageUrl && (
+          <div className="relative w-72 max-w-full h-40 mb-4">
+            <Image
+              src={imageUrl}
+              alt={recipeName}
+              fill={true}
+              className="rounded-md object-cover"
+            />
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className=""
+        />
+
         <input
           value={servings}
           type="number"
@@ -150,117 +216,8 @@ const Form = () => {
           required
         />
 
-        <fieldset className="border p-2 rounded-md">
-          <legend className="text-sm font-medium ">Ingredients</legend>
-          {ingredients.map((ingredient, index) => (
-            <div key={index} className="flex items-center">
-              <div className="w-[90%] flex rounded-md border border-gray-300 my-1 overflow-hidden">
-                <input
-                  type="text"
-                  placeholder="Ingredient"
-                  value={ingredient.name}
-                  onChange={(e) => {
-                    const newIngredients = [...ingredients];
-                    newIngredients[index].name = e.target.value;
-                    setIngredients(newIngredients);
-                  }}
-                  className="p-2 border-r w-full"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Quantity"
-                  value={ingredient.quantity}
-                  onChange={(e) => {
-                    const newIngredients = [...ingredients];
-                    newIngredients[index].quantity = e.target.value;
-                    setIngredients(newIngredients);
-                  }}
-                  className="p-2 border-r w-20"
-                  required
-                />
-                <select
-                  value={ingredient.unit}
-                  onChange={(e) => {
-                    const newIngredients = [...ingredients];
-                    newIngredients[index].unit = e.target.value;
-                    setIngredients(newIngredients);
-                  }}
-                  className="p-2 border-r w-20"
-                >
-                  <option value="units">Units</option>
-                  <option value="lbs">Lbs</option>
-                  <option value="cups">Cups</option>
-                  <option value="tbsp">Tbsp</option>
-                  <option value="tsp">Tsp</option>
-                </select>
-              </div>
-              {index !== 0 && (
-                <div
-                  className="w-[10%]"
-                  onClick={() => {
-                    const newIngredients = [...ingredients];
-                    newIngredients.splice(index, 1);
-                    setIngredients(newIngredients);
-                  }}
-                >
-                  <svg viewBox="0 0 1024 1024" fill="#000000">
-                    <path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z"></path>
-                    <path d="M328 340.8l32-31.2 348 348-32 32z"></path>
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
-          <div
-            onClick={addIngredient}
-            className="mt-2 py-1 w-12 flex justify-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Add
-          </div>
-        </fieldset>
-
-        <fieldset className="border p-2 rounded-md">
-          <legend className="text-sm font-medium">Directions</legend>
-          {directions.map((direction, index) => (
-            <div key={index} className="flex items-center">
-              <input
-                type="text"
-                placeholder="Direction"
-                value={direction}
-                onChange={(e) => {
-                  const newDirections = [...directions];
-                  newDirections[index] = e.target.value;
-                  setDirections(newDirections);
-                }}
-                className="block w-[90%] p-2 rounded-md border border-gray-300 my-1"
-                required
-              />
-              {index !== 0 && (
-                <div
-                  className="w-[10%]"
-                  onClick={() => {
-                    console.log(index);
-                    const newDirections = [...directions];
-                    newDirections.splice(index, 1);
-                    setDirections(newDirections);
-                  }}
-                >
-                  <svg viewBox="0 0 1024 1024" fill="#000000">
-                    <path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z"></path>
-                    <path d="M328 340.8l32-31.2 348 348-32 32z"></path>
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
-          <div
-            onClick={addDirection}
-            className="mt-2 py-1 w-12 flex justify-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Add
-          </div>
-        </fieldset>
+        <FormIngredients />
+        <FormDirections />
 
         <div className="mt-4 flex items-center justify-between">
           <div className="flex space-x-2">
@@ -270,17 +227,26 @@ const Form = () => {
             >
               Submit
             </button>
-            <div
-              onClick={clearForm}
-              className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
-            >
-              Clear
-            </div>
+            {editing ? (
+              <button
+                onClick={closeForm}
+                className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                onClick={clearForm}
+                className="py-2 px-4 bg-gray-400 text-white rounded-md hover:bg-gray-500"
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           {editing && (
             <div
-              onClick={() => deleteRecipe(recipeToEdit.id)}
+              onClick={(e) => deleteRecipe(e, recipeToEdit.id)}
               className="h-6 stroke-red-500"
             >
               <svg

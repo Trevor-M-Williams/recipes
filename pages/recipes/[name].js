@@ -5,7 +5,7 @@ import Layout from "../../components/Layout";
 import Form from "../../components/Form";
 import Image from "next/image";
 
-import sourdoughPancakes from "../../public/images/sourdough-pancakes.webp";
+import defaultImage from "../../public/images/default.jpg";
 
 function RecipePage() {
   const router = useRouter();
@@ -14,32 +14,32 @@ function RecipePage() {
   const { name } = router.query;
 
   if (!name) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <div>Loading...</div>
+      </Layout>
+    );
   }
 
   const allRecipes = Object.values(recipes).flat();
-  const currentRecipe = allRecipes.find(
+  const recipe = allRecipes.find(
     (recipe) => recipe.name.replaceAll(" ", "-").toLowerCase() === name
   );
 
-  if (!currentRecipe) {
-    return (
-      <Layout>
-        <div>Recipe Not Found</div>
-      </Layout>
-    );
+  if (!recipe) {
+    return <Layout></Layout>;
   }
 
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center mb-4">
-          <h1 className="text-2xl font-medium">{currentRecipe.name}</h1>
+          <h1 className="text-2xl font-medium capitalize">{recipe.name}</h1>
           <button
             className="h-4 ml-2 mt-1"
             onClick={() => {
               setEditing(true);
-              setRecipeToEdit(currentRecipe);
+              setRecipeToEdit(recipe);
               openModalWithContent(<Form />);
             }}
           >
@@ -57,22 +57,25 @@ function RecipePage() {
             </svg>
           </button>
         </div>
-        <Image
-          src={sourdoughPancakes}
-          alt="Sourdough Pancakes"
-          className="object-cover max-h-[50vh] mb-4"
-        />
+        <div className="relative h-[30vh] md:h-[50vh] mb-4 rounded overflow-hidden">
+          <Image
+            src={recipe.imageUrl || defaultImage}
+            alt={recipe.name}
+            fill={true}
+            className=" object-cover"
+          />
+        </div>
         <p>
           <strong className="font-bold">Servings: </strong>
-          {currentRecipe.servings}
+          {recipe.servings}
         </p>
         <p>
           <strong className="font-bold">Time to Cook: </strong>
-          {currentRecipe.timeToCook} minutes
+          {recipe.timeToCook} minutes
         </p>
         <p className="mt-4 mb-2 font-bold text-lg">Ingredients:</p>
         <ul className="list-disc list-inside mb-4">
-          {currentRecipe.ingredients?.map((ingredient, index) => {
+          {recipe.ingredients?.map((ingredient, index) => {
             let { name, quantity, unit } = ingredient;
             if (unit === "units") unit = "";
             else if (unit === "cups" && parseFloat(quantity) <= 1) unit = "cup";
@@ -85,7 +88,7 @@ function RecipePage() {
         </ul>
         <p className="mt-4 mb-2 font-bold text-lg">Directions:</p>
         <ol className="list-decimal list-inside mb-4">
-          {currentRecipe.directions?.map((direction, index) => (
+          {recipe.directions?.map((direction, index) => (
             <li key={index}>{direction}</li>
           ))}
         </ol>

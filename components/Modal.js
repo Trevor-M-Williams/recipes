@@ -1,11 +1,46 @@
-import { useRef, useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { RecipeContext } from "../context/RecipeContext";
 
 function Modal() {
-  const { setShowModal, modalContent } = useContext(RecipeContext);
   const modalRef = useRef();
+  const {
+    showModal, // Assuming this state is available in your context
+    setShowModal,
+    modalContent,
+    editing,
+    setEditing,
+    setRecipeName,
+    setIngredients,
+    setDirections,
+    setServings,
+    setCategory,
+    setTimeToCook,
+    setRecipeToEdit,
+  } = useContext(RecipeContext);
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showModal]);
 
   const closeModal = () => {
+    if (editing) {
+      setRecipeName("");
+      setIngredients([{ name: "", quantity: "", unit: "" }]);
+      setDirections([""]);
+      setServings("");
+      setTimeToCook("");
+      setCategory("");
+      setEditing(false);
+      setRecipeToEdit(null);
+    }
     setShowModal(false);
   };
 

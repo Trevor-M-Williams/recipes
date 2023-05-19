@@ -7,6 +7,7 @@ export const RecipeContext = createContext();
 export const RecipeProvider = ({ children }) => {
   const [recipes, setRecipes] = useState({});
   const [recipeName, setRecipeName] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
   const [ingredients, setIngredients] = useState([
     { name: "", quantity: "", unit: "" },
   ]);
@@ -57,6 +58,8 @@ export const RecipeProvider = ({ children }) => {
       value={{
         recipes,
         recipeName,
+        imageUrl,
+        setImageUrl,
         setRecipeName,
         ingredients,
         setIngredients,

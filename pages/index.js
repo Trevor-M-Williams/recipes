@@ -2,9 +2,7 @@ import { useContext } from "react";
 import { RecipeContext } from "../context/RecipeContext";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
-import Image from "next/image";
-
-import sourdoughPancakes from "../public/images/sourdough-pancakes.webp";
+import Card from "../components/Card";
 
 function Home() {
   const router = useRouter();
@@ -35,25 +33,9 @@ function Home() {
           >
             {category}
           </h2>
-          <div className="flex gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
+          <div className="flex overflow-auto px-4 pb-4 gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
             {sortedRecipes[category].map((recipe, index) => (
-              <div
-                key={index}
-                className="w-72 max-w-full shrink-0 rounded-md cursor-pointer overflow-hidden shadow-lg"
-                onClick={() => openRecipe(recipe.name)}
-              >
-                <div className="h-60 sm:h-52 w-full overflow-hidden">
-                  <Image
-                    src={sourdoughPancakes}
-                    alt="Sourdough Pancakes"
-                    className="h-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
-                  />
-                </div>
-                <div className="p-4 bg-white">
-                  <h2 className="text-xl font-medium">{recipe.name}</h2>
-                  <p>{recipe.timeToCook} min</p>
-                </div>
-              </div>
+              <Card key={index} recipe={recipe} openRecipe={openRecipe} />
             ))}
           </div>
         </div>
