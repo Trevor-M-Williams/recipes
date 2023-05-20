@@ -16,6 +16,7 @@ import FormDirections from "./FormDirections";
 
 const Form = () => {
   const [newImage, setNewImage] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState(null);
 
   const {
     recipeName,
@@ -62,6 +63,8 @@ const Form = () => {
     setCategory("");
     setEditing(false);
     setRecipeToEdit(null);
+    setImageUrl(null);
+    setUploadStatus(null);
   };
 
   const closeForm = (e) => {
@@ -90,14 +93,18 @@ const Form = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // You can observe state change here such as progress, pause, and resume
+          let progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadStatus(`Upload is ${progress}% done`);
         },
         (error) => {
           console.log(error);
+          setUploadStatus("Upload failed");
           reject(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setUploadStatus("Upload completed");
             resolve(downloadURL);
           });
         }
@@ -200,8 +207,9 @@ const Form = () => {
         />
 
         <input
-          value={servings}
+          value={servings || ""}
           type="number"
+          min={1}
           placeholder="Servings"
           onChange={(e) => setServings(e.target.value)}
           className="block w-full p-2 rounded-md border border-gray-300"
@@ -266,6 +274,7 @@ const Form = () => {
             </div>
           )}
         </div>
+        {uploadStatus && <p>{uploadStatus}</p>}
       </form>
     </div>
   );

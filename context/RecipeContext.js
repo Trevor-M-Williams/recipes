@@ -7,13 +7,13 @@ export const RecipeContext = createContext();
 export const RecipeProvider = ({ children }) => {
   const [recipes, setRecipes] = useState({});
   const [recipeName, setRecipeName] = useState("");
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [ingredients, setIngredients] = useState([
     { name: "", quantity: "", unit: "" },
   ]);
   const [directions, setDirections] = useState([""]);
-  const [servings, setServings] = useState(null);
-  const [timeToCook, setTimeToCook] = useState(null);
+  const [servings, setServings] = useState("");
+  const [timeToCook, setTimeToCook] = useState("");
   const [category, setCategory] = useState("");
 
   const [showModal, setShowModal] = useState(false);
