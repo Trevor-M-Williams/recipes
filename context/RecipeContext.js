@@ -5,6 +5,8 @@ import { ref, onValue } from "firebase/database";
 export const RecipeContext = createContext();
 
 export const RecipeProvider = ({ children }) => {
+  const [dev, setDev] = useState(false);
+
   const [recipes, setRecipes] = useState({});
   const [recipeName, setRecipeName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -44,6 +46,12 @@ export const RecipeProvider = ({ children }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      setDev(true);
+    }
+  }, []);
+
   const openModalWithContent = (content) => {
     if (!content) {
       setShowModal(false);
@@ -56,6 +64,7 @@ export const RecipeProvider = ({ children }) => {
   return (
     <RecipeContext.Provider
       value={{
+        dev,
         recipes,
         recipeName,
         imageUrl,

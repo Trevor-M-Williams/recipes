@@ -9,7 +9,7 @@ import defaultImage from "../../public/images/default.jpg";
 
 function RecipePage() {
   const router = useRouter();
-  const { recipes, setEditing, setRecipeToEdit, openModalWithContent } =
+  const { recipes, setEditing, setRecipeToEdit, openModalWithContent, dev } =
     useContext(RecipeContext);
   const { name } = router.query;
 
@@ -59,7 +59,7 @@ function RecipePage() {
         </div>
         <div className="relative h-[30vh] md:h-[50vh] mb-4 rounded overflow-hidden">
           <Image
-            src={recipe.imageUrl || defaultImage}
+            src={dev ? defaultImage : recipe.imageUrl || defaultImage}
             alt={recipe.name}
             fill={true}
             className=" object-cover"
