@@ -16,7 +16,7 @@ import FormDirections from "./FormDirections";
 
 const Form = () => {
   const [newImage, setNewImage] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(null);
 
   const {
     recipeName,
@@ -64,7 +64,7 @@ const Form = () => {
     setEditing(false);
     setRecipeToEdit(null);
     setImageUrl(null);
-    setUploadStatus(null);
+    setUploadProgress(null);
   };
 
   const closeForm = (e) => {
@@ -95,16 +95,14 @@ const Form = () => {
         (snapshot) => {
           let progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadStatus(`Upload is ${progress}% done`);
+          setUploadProgress(progress);
         },
         (error) => {
           console.log(error);
-          setUploadStatus("Upload failed");
           reject(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setUploadStatus("Upload completed");
             resolve(downloadURL);
           });
         }
@@ -123,6 +121,7 @@ const Form = () => {
     if (newImage) {
       console.log("uploading image");
       newImageUrl = await uploadImageToFirebase(newImage);
+      console.log(newImageUrl);
     }
 
     if (editing) {
@@ -158,6 +157,14 @@ const Form = () => {
       <h1 className="text-2xl font-medium mb-2">
         {editing ? "Edit Recipe" : "New Recipe"}
       </h1>
+      {uploadProgress !== null && (
+        <progress
+          value={uploadProgress}
+          max="100"
+          className="w-full bg-blue-500 rounded-full mb-4"
+        ></progress>
+      )}
+
       <form
         className="space-y-4 max-h-[70vh] overflow-auto"
         onSubmit={writeRecipeToFirebase}
@@ -274,7 +281,6 @@ const Form = () => {
             </div>
           )}
         </div>
-        {uploadStatus && <p>{uploadStatus}</p>}
       </form>
     </div>
   );
