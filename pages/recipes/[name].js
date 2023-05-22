@@ -59,7 +59,7 @@ function RecipePage() {
         </div>
         <div className="relative h-[30vh] md:h-[50vh] mb-4 rounded overflow-hidden">
           <Image
-            src={dev ? defaultImage : recipe.imageUrl || defaultImage}
+            src={recipe.imageUrl || defaultImage}
             alt={recipe.name}
             fill={true}
             className=" object-cover"

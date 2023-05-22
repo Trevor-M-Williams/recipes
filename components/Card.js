@@ -11,7 +11,7 @@ function Card({ recipe, index, openRecipe, dev }) {
     >
       <div className="relative h-60 max-h-[50vh] w-full overflow-hidden">
         <Image
-          src={dev ? defaultImage : recipe.imageUrl || defaultImage}
+          src={recipe.imageUrl || defaultImage}
           alt={name}
           fill={true}
           className="object-cover transition-all duration-500 ease-in-out hover:scale-[1.15]"

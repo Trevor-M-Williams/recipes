@@ -13,6 +13,7 @@ import {
 
 import FormIngredients from "./FormIngredients";
 import FormDirections from "./FormDirections";
+import ProgressBar from "./ProgressBar";
 
 const Form = () => {
   const [newImage, setNewImage] = useState(null);
@@ -157,13 +158,7 @@ const Form = () => {
       <h1 className="text-2xl font-medium mb-2">
         {editing ? "Edit Recipe" : "New Recipe"}
       </h1>
-      {uploadProgress !== null && (
-        <progress
-          value={uploadProgress}
-          max="100"
-          className="w-full bg-blue-500 rounded-full mb-4"
-        ></progress>
-      )}
+      {uploadProgress !== null && <ProgressBar progress={uploadProgress} />}
 
       <form
         className="space-y-4 max-h-[70vh] overflow-auto"
@@ -262,7 +257,7 @@ const Form = () => {
           {editing && (
             <div
               onClick={(e) => deleteRecipe(e, recipeToEdit.id)}
-              className="h-6 stroke-red-500"
+              className="h-6 stroke-red-500 cursor-pointer"
             >
               <svg
                 viewBox="0 0 24 24"
