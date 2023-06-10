@@ -13,7 +13,7 @@ const AuthGate = ({ children }) => {
   }, [currentUser, initializing]);
 
   if (initializing) {
-    return <div>Loading...</div>; // Or a loading spinner if you want
+    return <div>Loading...</div>;
   }
 
   return children;

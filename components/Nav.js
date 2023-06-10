@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { RecipeContext } from "../context/RecipeContext";
 import Link from "next/link";
 import Form from "./Form";
+import GPTForm from "./GPTForm";
 import SearchResults from "./SearchResults";
 
 function Nav() {
@@ -12,6 +13,12 @@ function Nav() {
     setEditing(false);
     setRecipeToEdit(null);
     openModalWithContent(<Form />);
+  };
+
+  const openGPTForm = () => {
+    setEditing(false);
+    setRecipeToEdit(null);
+    openModalWithContent(<GPTForm />);
   };
 
   const openSearch = () => {
@@ -63,7 +70,7 @@ function Nav() {
         </button>
 
         <button
-          onClick={() => console.log("gpt")}
+          onClick={openGPTForm}
           className="h-6 w-6 flex items-center justify-center text-white font-bold rounded-full border border-[#fff] bg-blue-500"
         >
           <svg
