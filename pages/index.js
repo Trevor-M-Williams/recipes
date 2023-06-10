@@ -31,9 +31,9 @@ function Home() {
             className="capitalize text-2xl font-medium mb-4 cursor-pointer"
             onClick={() => openCategory(category)}
           >
-            {category}
+            {category === "snack" ? "snacks" : category}
           </h2>
-          <div className="flex overflow-auto px-4 pb-4 gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
+          <div className="flex overflow-auto sm:px-4 pb-4 gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
             {sortedRecipes[category].map((recipe, index) => (
               <Card
                 key={index}

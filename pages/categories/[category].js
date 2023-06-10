@@ -37,7 +37,7 @@ function CategoryPage() {
       <h1 className="capitalize text-2xl font-medium mb-4">
         {category} Recipes
       </h1>
-      <div className="flex flex-col px-4 gap-6 xs:flex-row xs:flex-wrap xs:gap-x-[2%] xs:gap-y-4">
+      <div className="flex flex-col md:px-4 gap-6 xs:flex-row xs:flex-wrap xs:gap-x-[2%] xs:gap-y-4">
         {sortedRecipes &&
           sortedRecipes.map((recipe, index) => (
             <Card key={index} recipe={recipe} openRecipe={openRecipe} />

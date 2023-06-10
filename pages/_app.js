@@ -1,12 +1,18 @@
+import AuthGate from "../auth/AuthGate";
+import { AuthProvider } from "../context/AuthContext";
 import { RecipeProvider } from "../context/RecipeContext";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
-    <RecipeProvider>
-      <Component {...pageProps} />
-    </RecipeProvider>
+    <AuthProvider>
+      <AuthGate>
+        <RecipeProvider>
+          <Component {...pageProps} />
+        </RecipeProvider>
+      </AuthGate>
+    </AuthProvider>
   );
 }
 
-export default MyApp;
+export default App;
