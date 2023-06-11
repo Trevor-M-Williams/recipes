@@ -6,10 +6,10 @@ function Card({ recipe, index, openRecipe, width = "w-full" }) {
   return (
     <div
       key={index}
-      className={`${width} xs:w-[49%] md:w-[32%] shrink-0 rounded-md cursor-pointer overflow-hidden shadow-lg`}
+      className={`${width} xs:w-[49%] md:w-[32%] shrink-0 rounded-md cursor-pointer shadow-lg`}
       onClick={() => openRecipe(name)}
     >
-      <div className="relative h-60 max-h-[50vh] w-full overflow-hidden">
+      <div className="relative h-60 max-h-[50vh] w-full rounded-t-md overflow-hidden">
         <Image
           src={recipe.imageUrl || defaultImage}
           alt={name}
