@@ -31,7 +31,7 @@ function FormIngredients() {
                 newIngredients[index].name = e.target.value;
                 setIngredients(newIngredients);
               }}
-              className="p-2 border-r w-full rounded-l-md"
+              className="p-2 border-r w-full rounded-none rounded-l-md"
               required
             />
             <input
@@ -43,7 +43,7 @@ function FormIngredients() {
                 newIngredients[index].quantity = e.target.value;
                 setIngredients(newIngredients);
               }}
-              className="p-2 border-r w-20"
+              className="p-2 border-r rounded-none w-20"
               required
             />
             <select
