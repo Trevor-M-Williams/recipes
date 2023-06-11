@@ -39,7 +39,7 @@ function Home() {
                 key={index}
                 recipe={recipe}
                 openRecipe={openRecipe}
-                dev={dev}
+                width="w-[90%]"
               />
             ))}
           </div>

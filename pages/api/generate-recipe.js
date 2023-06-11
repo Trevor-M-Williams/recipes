@@ -44,12 +44,15 @@ export default async function handler(req, res) {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: fullPrompt,
-      max_tokens: 2000,
+      max_tokens: 4096,
     });
 
+    console.log(completion.data.choices[0].text);
     res.status(200).json({ data: completion.data.choices[0].text });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: "An error occured" });
+    res
+      .status(500)
+      .json({ message: "An error occured when generating the completion" });
   }
 }

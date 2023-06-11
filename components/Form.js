@@ -161,7 +161,7 @@ const Form = () => {
       {uploadProgress !== null && <ProgressBar progress={uploadProgress} />}
 
       <form
-        className="space-y-4 max-h-[70vh] overflow-auto"
+        className="space-y-4 max-h-[70vh] overflow-auto overflow-x-hidden"
         onSubmit={writeRecipeToFirebase}
       >
         <input

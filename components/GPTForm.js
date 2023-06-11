@@ -16,13 +16,8 @@ const GPTForm = () => {
     const convertedObj = {};
 
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const lowercaseKey = key.toLowerCase();
-        convertedObj[lowercaseKey] = obj[key];
-        if (lowercaseKey !== key) {
-          delete obj[key];
-        }
-      }
+      const newKey = key[0].toLowerCase() + key.slice(1);
+      convertedObj[newKey] = obj[key];
     }
 
     return convertedObj;
@@ -86,12 +81,12 @@ const GPTForm = () => {
         className="space-y-4 max-h-[70vh] overflow-auto"
         onSubmit={handleSubmit}
       >
-        <input
+        <textarea
           value={prompt}
           type="text"
           placeholder="Describe your recipe..."
           onChange={(e) => setPrompt(e.target.value)}
-          className="block w-full p-2 rounded-md border border-gray-300"
+          className="block w-full min-h-[10rem] p-2 my-2 rounded-md border border-gray-300"
           required
         />
 

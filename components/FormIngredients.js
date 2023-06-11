@@ -53,7 +53,7 @@ function FormIngredients() {
                 newIngredients[index].unit = e.target.value;
                 setIngredients(newIngredients);
               }}
-              className="p-2 border-r w-20"
+              className="p-2 border-r w-20 rounded-none rounded-r-md"
             >
               <option value="units">Units</option>
               <option value="lbs">Lbs</option>
