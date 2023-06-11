@@ -6,7 +6,7 @@ import Card from "../components/Card";
 
 function Home() {
   const router = useRouter();
-  const { recipes, dev } = useContext(RecipeContext);
+  const { recipes } = useContext(RecipeContext);
 
   const sortedRecipes = { ...recipes };
   for (const category in sortedRecipes) {
@@ -33,13 +33,13 @@ function Home() {
           >
             {category === "snack" ? "snacks" : category}
           </h2>
-          <div className="flex overflow-auto sm:px-4 pb-4 gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
+          <div className="flex overflow-auto px-2 pb-4 sm:px-4 gap-x-4 md:gap-x-[2%] md:gap-y-3 md:gap-y-4 mb-4">
             {sortedRecipes[category].map((recipe, index) => (
               <Card
                 key={index}
                 recipe={recipe}
                 openRecipe={openRecipe}
-                width="w-[90%]"
+                width="w-[90%] xs:w-[48%] md:w-[31%]"
               />
             ))}
           </div>

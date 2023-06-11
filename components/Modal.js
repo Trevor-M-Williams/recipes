@@ -44,16 +44,16 @@ function Modal() {
     setShowModal(false);
   };
 
-  const handleClickOutside = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
-      closeModal();
-    }
-  };
+  // const handleClickOutside = (event) => {
+  //   if (modalRef.current && !modalRef.current.contains(event.target)) {
+  //     closeModal();
+  //   }
+  // };
 
   return (
     <div
       className="fixed z-10 inset-0 overflow-auto flex items-center justify-center"
-      onClick={handleClickOutside}
+      // onClick={handleClickOutside}
     >
       <div
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"

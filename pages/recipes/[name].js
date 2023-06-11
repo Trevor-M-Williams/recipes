@@ -9,7 +9,7 @@ import defaultImage from "../../public/images/default.jpg";
 
 function RecipePage() {
   const router = useRouter();
-  const { recipes, setEditing, setRecipeToEdit, openModalWithContent, dev } =
+  const { recipes, setEditing, setRecipeToEdit, openModalWithContent } =
     useContext(RecipeContext);
   const { name } = router.query;
 

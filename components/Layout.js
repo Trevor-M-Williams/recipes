@@ -6,7 +6,7 @@ import Modal from "./Modal";
 function Layout({ children }) {
   const { showModal } = useContext(RecipeContext);
   return (
-    <div className="px-4 sm:px-6 flex flex-col items-center mb-8">
+    <div className="px-4 sm:px-6 flex justify-center mb-8">
       <div className="relative w-full max-w-7xl">
         <Nav />
         <main className="">{children}</main>

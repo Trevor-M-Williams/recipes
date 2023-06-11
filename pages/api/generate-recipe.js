@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       ],
       "servings": //serving size, number
       "timeToCook": //cook time in minutes, number
-      "category": //category: breakfast, lunch, dinner, dessert, or snack, string
+      "category": //category: breakfast, dinner, dessert, or snack, string
     } 
   `;
 
@@ -44,13 +44,13 @@ export default async function handler(req, res) {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: fullPrompt,
-      max_tokens: 4096,
+      max_tokens: 2000,
     });
 
     console.log(completion.data.choices[0].text);
     res.status(200).json({ data: completion.data.choices[0].text });
   } catch (err) {
-    console.error(err.message);
+    console.error(err.response?.data);
     res
       .status(500)
       .json({ message: "An error occured when generating the completion" });

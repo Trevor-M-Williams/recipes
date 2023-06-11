@@ -1,12 +1,17 @@
 import Image from "next/image";
 import defaultImage from "../public/images/default.jpg";
 
-function Card({ recipe, index, openRecipe, width = "w-full" }) {
+function Card({
+  recipe,
+  index,
+  openRecipe,
+  width = "w-full xs:w-[49%] md:w-[32%]",
+}) {
   const { name, timeToCook } = recipe;
   return (
     <div
       key={index}
-      className={`${width} xs:w-[49%] md:w-[32%] shrink-0 rounded-md cursor-pointer shadow-lg`}
+      className={`${width} rounded-md overflow-hidden shrink-0 cursor-pointer shadow-lg`}
       onClick={() => openRecipe(name)}
     >
       <div className="relative h-60 max-h-[50vh] w-full rounded-t-md overflow-hidden">
